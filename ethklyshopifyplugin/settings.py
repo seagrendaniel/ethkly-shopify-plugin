@@ -30,7 +30,7 @@ SECRET_KEY = 'm4!&=7iqxtg1&$gk#e3hgpa3#5y0ai!mxuil1cg)x-o$zbqz31'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['7b3ce72e.ngrok.io']
 
 # Configure Shopify Application settings
 SHOPIFY_APP_NAME = 'Ethkly'

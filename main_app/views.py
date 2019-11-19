@@ -6,8 +6,17 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from shopify_auth.decorators import login_required
 # Create your views here.
 
+import requests
+import json
 
-def home(request):
-    return render('Hello World!')
+
+
+def home(request, *args, **kwargs):
+    return render(request, 'home.html')
+
+def install(request):
+    return render(request, 'home.html')
+
