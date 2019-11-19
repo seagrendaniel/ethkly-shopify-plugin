@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 import environ
 import shopify
+from django.conf import global_settings
 
 environ.Env()
 environ.Env.read_env()
@@ -53,7 +54,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 # Use the Shopify Auth user model.
-AUTH_USER_MODEL = 'auth_app.AuthAppShopUser'
+AUTH_USER_MODEL = 'main_app.AuthAppShopUser'
 
 # Set the login redirect URL to the "home" page for your app (where to go after logging on).
 LOGIN_REDIRECT_URL = '/'
@@ -70,7 +71,7 @@ SESSION_COOKIE_SAMESITE = False
 
 INSTALLED_APPS = [
     'main_app',
-    'shopify-auth',
+    'shopify_auth',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -115,8 +116,8 @@ WSGI_APPLICATION = 'ethklyshopifyplugin.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ethkly',
     }
 }
 
