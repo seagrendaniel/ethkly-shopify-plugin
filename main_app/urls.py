@@ -1,7 +1,7 @@
-from django.urls import path, include
-from . import views
+from django.urls import include, path
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    
+    path('login/', include('shopify_auth.urls')),
+
+    # ... remaining configuration here ...
 ]

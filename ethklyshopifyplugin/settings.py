@@ -12,13 +12,13 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import environ
+import shopify
 
 environ.Env()
 environ.Env.read_env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# dotenv.load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -31,11 +31,46 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Configure Shopify Application settings
+SHOPIFY_APP_NAME = 'Ethkly'
+SHOPIFY_APP_API_KEY = os.environ.get('SHOPIFY_APP_API_KEY')
+SHOPIFY_APP_API_SECRET = os.environ.get('SHOPIFY_APP_API_SECRET')
+SHOPIFY_APP_API_SCOPE = ['read_products', 'read_orders']
+# Find API version to pin at https://help.shopify.com/en/api/versioning
+SHOPIFY_APP_API_VERSION = "0000-00"
+SHOPIFY_APP_IS_EMBEDDED = False
+SHOPIFY_APP_DEV_MODE = True
 
-# Application definition
+# Use the Shopify Auth authentication backend as the sole authentication backend.
+AUTHENTICATION_BACKENDS = (
+    'shopify_auth.backends.ShopUserBackend',
+)
+
+# Add the Shopify Auth template context processor to the list of processors.
+# Note that this assumes you've defined TEMPLATE_CONTEXT_PROCESSORS earlier in your settings.
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'shopify_auth.context_processors.shopify_auth',
+)
+
+# Use the Shopify Auth user model.
+AUTH_USER_MODEL = 'auth_app.AuthAppShopUser'
+
+# Set the login redirect URL to the "home" page for your app (where to go after logging on).
+LOGIN_REDIRECT_URL = '/'
+
+# Set secure proxy header to allow proper detection of secure URLs behind a proxy.
+# This ensures that correct 'https' URLs are generated when our Django app is running behind a proxy like nginx, or is
+# being tunneled (by ngrok, for example).
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# For Django>=2.1, if you are using ngrok or other tools for tunnelling/proxying when developing,
+# we must explicitly allow cookies from different sites or the auth redirection after the login will
+# result in an infinite loop (session cannot be read from cookies)
+SESSION_COOKIE_SAMESITE = False
 
 INSTALLED_APPS = [
     'main_app',
+    'shopify-auth',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
