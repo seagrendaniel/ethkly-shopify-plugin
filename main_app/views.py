@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from shopify_auth.decorators import login_required
 from django.http import HttpResponseRedirect
 # Create your views here.
+from flask import Flask, render_template, request, redirect, Response, session
 import os
 import requests
 import json
@@ -37,33 +38,29 @@ def install(request):
 
 
 # @app.route('/connect', methods=['GET'])
-def connect():
-    if request.args.get("shop"):
+def connect(request):
+    if request.GET.get("shop"):
         params = {
-            "client_id": cfg.SHOPIFY_CONFIG["API_KEY"],
-            "client_secret": cfg.SHOPIFY_CONFIG["API_SECRET"],
-            "code": request.args.get("code")
+            "client_id": SHOPIFY_APP_API_KEY,
+            "client_secret": SHOPIFY_APP_API_SECRET,
+            "code": request.GET.get("code")
         }
         resp = requests.post(
             "https://{0}/admin/oauth/access_token".format(
-                request.args.get("shop")
+                request.GET.get("shop")
             ),
             data=params
         )
-​
         if 200 == resp.status_code:
             resp_json = json.loads(resp.text)
-​
-            session['access_token'] = resp_json.get("access_token")
-            session['shop'] = request.args.get("shop")
-​
-            return render_template('welcome.html', from_shopify=resp_json,
-                                   products=products())
+
+            access_token = resp_json.get("access_token")
+            shop = request.GET.get("shop")
+
+            return render(request, 'welcome.html')
         else:
-            print "Failed to get access token: ", resp.status_code, resp.text
-            return render_template('error.html')
-​
-​
+            print ("Failed to get access token: ", resp.status_code, resp.text)
+            return render(request, 'error.html')
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
 
